@@ -7,7 +7,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import { makeEventPreventable, mergeProps } from '../merge-props';
 import { useModernLayoutEffect } from './useModernLayoutEffect';
 import { useRootElementName } from './useRootElementName';
-import { useCompositeRootContext } from '../composite/CompositeRootContext';
+import { useCompositeRootContext } from '../composite/root/CompositeRootContext';
 import { BaseUIEvent, HTMLProps } from './types';
 
 const BUTTON_TYPES = new Set(['button', 'submit', 'reset']);
