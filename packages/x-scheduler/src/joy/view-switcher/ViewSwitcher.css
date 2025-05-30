@@ -1,0 +1,120 @@
+@import '../styles/tokens.css';
+
+.ViewSwitcherContainer {
+  --color-blue: oklch(45% 50% 264deg);
+}
+
+.mode-dark .ViewSwitcherContainer {
+  --color-blue: oklch(69% 50% 264deg);
+}
+
+.ViewSwitcherMenuBar {
+  display: flex;
+  gap: 1px;
+  background-color: var(--color-gray-50);
+  border: 1px solid var(--mauve-2);
+  border-radius: 0.375rem;
+  padding: 0.125rem;
+}
+
+.ViewSwitcherMenuTrigger {
+  box-sizing: border-box;
+  background: none;
+  padding: 0 0.75rem;
+  margin: 0;
+  outline: 0;
+  border: 0;
+  color: var(--color-gray-600);
+  border-radius: 0.25rem;
+  user-select: none;
+  height: 2rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.ViewSwitcherMenuTrigger[data-pressed],
+.ViewSwitcherMenuTrigger:focus-visible {
+  background-color: var(--violet-3);
+  outline: none;
+}
+
+.ViewSwitcherMenuTrigger[aria-expanded='true'] {
+  background-color: var(--violet-3);
+}
+
+.ViewSwitcherMenuTrigger[data-disabled] {
+  opacity: 0.5;
+}
+
+.ViewSwitcherMenuPositioner {
+  outline: 0;
+  z-index: 3;
+}
+
+.ViewSwitcherMenuPopup {
+  box-sizing: border-box;
+  padding-block: 0.25rem;
+  border-radius: 0.375rem;
+  background-color: canvas;
+  color: var(--color-gray-900);
+  transform-origin: var(--transform-origin);
+  outline: 1px solid var(--mauve-2);
+  box-shadow:
+    0 10px 15px -3px var(--mauve-2),
+    0 4px 6px -4px var(--mauve-2);
+}
+
+.ViewSwitcherMenuPopup[data-ending-style] {
+  opacity: 0;
+  transition: opacity 150ms;
+}
+
+.ViewSwitcherMenuPopup[data-instant] {
+  transition: none;
+}
+
+.ViewSwitcherMenuItem {
+  outline: 0;
+  z-index: 3;
+  cursor: default;
+  user-select: none;
+  padding: 0.5rem 1rem;
+  display: flex;
+  font-size: 0.875rem;
+  line-height: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ViewSwitcherMenuItem[data-popup-open] {
+  z-index: 0;
+  position: relative;
+}
+
+.ViewSwitcherMenuItem[data-popup-open]::before {
+  content: '';
+  z-index: -1;
+  position: absolute;
+  inset-block: 0;
+  inset-inline: 0.25rem;
+  border-radius: 0.25rem;
+  background-color: var(--color-gray-100);
+}
+
+.ViewSwitcherMenuItem[data-highlighted] {
+  z-index: 0;
+  position: relative;
+  color: var(--color-gray-50);
+}
+
+.ViewSwitcherMenuItem[data-highlighted]::before {
+  content: '';
+  z-index: -1;
+  position: absolute;
+  inset-block: 0;
+  inset-inline: 0.25rem;
+  border-radius: 0.25rem;
+  background-color: var(--color-gray-900);
+}
