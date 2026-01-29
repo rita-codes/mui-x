@@ -45,7 +45,12 @@ describe('Core - EventTimelinePremiumStore', () => {
         errors: [],
       };
 
-      expect(store.state).to.deep.equal(expectedState);
+      // Ignore internal cache keys added by store effects
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { __cacheKey__: _cacheKey, ...actualState } = store.state as typeof store.state & {
+        __cacheKey__?: unknown;
+      };
+      expect(actualState).to.deep.equal(expectedState);
     });
   });
 });
