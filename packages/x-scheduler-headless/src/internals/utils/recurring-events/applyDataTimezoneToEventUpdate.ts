@@ -7,6 +7,7 @@ import {
   TemporalSupportedObject,
 } from '../../../models';
 import { getWeekDayCode, NOT_LOCALIZED_WEEK_DAYS_INDEXES } from './internal-utils';
+import { resolveEventDate } from '../../../process-event/resolveEventDate';
 
 export function applyDataTimezoneToEventUpdate({
   adapter,
@@ -24,15 +25,15 @@ export function applyDataTimezoneToEventUpdate({
   const result: SchedulerEventUpdatedProperties = { ...changes };
 
   if (result.start) {
-    result.start = toDataTz(result.start);
+    result.start = toDataTz(resolveEventDate(result.start, dataTz, adapter));
   }
 
   if (result.end) {
-    result.end = toDataTz(result.end);
+    result.end = toDataTz(resolveEventDate(result.end, dataTz, adapter));
   }
 
   if (result.exDates?.length) {
-    result.exDates = result.exDates.map(toDataTz);
+    result.exDates = result.exDates.map((d) => toDataTz(resolveEventDate(d, dataTz, adapter)));
   }
 
   if (result.rrule && typeof result.rrule === 'object') {

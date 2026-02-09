@@ -36,14 +36,14 @@ storeClasses.forEach((storeClass) => {
         start: {
           getter: (event) => adapter.date(event.myStart, 'default'),
           setter: (event, value) => {
-            event.myStart = value.toISOString()!;
+            event.myStart = typeof value === 'string' ? value : value.toISOString()!;
             return event;
           },
         },
         end: {
           getter: (event) => adapter.date(event.myEnd, 'default'),
           setter: (event, value) => {
-            event.myEnd = value.toISOString()!;
+            event.myEnd = typeof value === 'string' ? value : value.toISOString()!;
             return event;
           },
         },

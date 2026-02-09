@@ -6,6 +6,16 @@ import type { SchedulerResourceId } from './resource';
 export type { TemporalTimezone } from '../base-ui-copy/types';
 
 /**
+ * Accepted input types for event date fields (`start`, `end`, `exDates`).
+ *
+ * - `TemporalSupportedObject` – a `Date` or `TZDate` instance (instant-based).
+ * - `string` ending with `"Z"` – parsed as a UTC instant, identical to `new Date(value)`.
+ * - `string` **without** `"Z"` – interpreted as **wall-time** in `event.timezone`
+ *   (falls back to `"default"` when `timezone` is not set).
+ */
+export type SchedulerEventDateInput = TemporalSupportedObject | string;
+
+/**
  * Base shape for processed scheduler events.
  *
  * Contains properties that are required for rendering and user interaction,
@@ -185,11 +195,11 @@ export interface SchedulerEvent {
   /**
    * The start date and time of the event.
    */
-  start: TemporalSupportedObject;
+  start: SchedulerEventDateInput;
   /**
    * The end date and time of the event.
    */
-  end: TemporalSupportedObject;
+  end: SchedulerEventDateInput;
   /**
    * The timezone of the event dates.
    */
@@ -210,7 +220,7 @@ export interface SchedulerEvent {
    * Exception dates for the event.
    * These dates will be excluded from the recurrence.
    */
-  exDates?: TemporalSupportedObject[];
+  exDates?: SchedulerEventDateInput[];
   /**
    * Whether the event is an all-day event.
    * @default false
@@ -421,7 +431,9 @@ export type SchedulerEventCreationProperties = Omit<SchedulerEvent, 'id'>;
  * Properties to pass to the methods that paste an event.
  */
 export type SchedulerEventPasteProperties = Partial<
-  Pick<SchedulerEvent, 'start' | 'resource' | 'allDay'>
+  Pick<SchedulerProcessedEvent, 'resource' | 'allDay'> & {
+    start: TemporalSupportedObject;
+  }
 >;
 
 // TODO: Consider splitting the interface in two, one for the Event Calendar and one for the Event Timeline Premium.

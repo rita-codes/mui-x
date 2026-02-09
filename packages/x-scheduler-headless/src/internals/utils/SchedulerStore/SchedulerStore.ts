@@ -500,9 +500,9 @@ export class SchedulerStore<
 
     const original = schedulerEventSelectors.processedEventRequired(this.state, copiedEvent.id);
     const cleanChanges: Partial<SchedulerEvent> = { ...changes };
-    if (cleanChanges.start != null) {
+    if (changes.start != null) {
       cleanChanges.end = adapter.addMilliseconds(
-        cleanChanges.start,
+        changes.start,
         original.dataTimezone.end.timestamp - original.dataTimezone.start.timestamp,
       );
     }

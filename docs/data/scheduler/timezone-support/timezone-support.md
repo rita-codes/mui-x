@@ -57,14 +57,12 @@ The `timezone` field does not affect the event dates. It is only used internally
 
 ## Event date values
 
-The `start` and `end` fields of an event must represent a fixed moment in time.
-
-They are expected to be provided as JavaScript `Date` objects or timezone-aware
-date objects (such as `TZDate`).
+The `start`, `end`, and `exDates` fields of an event accept JavaScript `Date` objects,
+timezone-aware date objects (such as `TZDate`), or ISO 8601 strings.
 
 :::info
-The timezone of the date object itself is not used to define event semantics.
-Only the instant it represents is taken into account.
+When using `Date` or `TZDate` objects, the timezone of the object itself is not used to
+define event semantics. Only the instant it represents is taken into account.
 :::
 
 ## Rendering behavior
@@ -115,13 +113,39 @@ This is the only case where Scheduler intentionally operates on wall-time semant
 instead of pure instants.
 :::
 
-## What Scheduler does not support yet
+## String dates and wall-time events
 
-Scheduler currently does not support wall-time event definitions based on string dates.
+Scheduler accepts ISO 8601 strings for `start`, `end`, and `exDates`.
+The trailing `Z` determines how the string is interpreted:
 
-This means:
+### Instant-based strings (with `Z`)
 
-- Dates without an explicit instant (for example `"2024-03-10 09:00"`) are not supported
-- Event dates are not reinterpreted based on `event.timezone`
+A string ending with `Z` is treated as a UTC instant, identical to passing `new Date(value)`:
 
-Support for string-based, wall-time event definitions is planned for a future release.
+```ts
+const event = {
+  start: '2025-06-10T09:00:00Z',
+  end: '2025-06-10T10:00:00Z',
+  timezone: 'America/New_York',
+};
+```
+
+This is equivalent to `start: new Date('2025-06-10T09:00:00Z')`.
+
+### Wall-time strings (without `Z`)
+
+A string **without** a trailing `Z` is interpreted as **wall-time** in `event.timezone`
+(or `"default"` if `timezone` is not set):
+
+```ts
+const event = {
+  start: '2025-06-10T09:00:00',
+  end: '2025-06-10T10:00:00',
+  timezone: 'America/New_York',
+};
+```
+
+This means "09:00 in New York", regardless of whether daylight saving time applies.
+Scheduler resolves the string to the correct instant using the event timezone.
+
+{{"demo": "TimezoneDatasetWallTime.js", "bg": "inline", "defaultCodeOpen": false}}
