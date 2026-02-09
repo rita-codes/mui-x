@@ -417,8 +417,14 @@ export interface SchedulerProcessedDate {
  * The `id`, `start` and `end` properties are required in order to identify the event to update and the new dates.
  * All other properties are optional and can be skipped if not modified.
  */
-export type SchedulerEventUpdatedProperties = Partial<SchedulerEvent> & {
+export type SchedulerEventUpdatedProperties = Omit<
+  Partial<SchedulerEvent>,
+  'start' | 'end' | 'exDates'
+> & {
   id: SchedulerEventId;
+  start?: TemporalSupportedObject;
+  end?: TemporalSupportedObject;
+  exDates?: TemporalSupportedObject[];
 };
 
 /**

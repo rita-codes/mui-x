@@ -28,7 +28,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
     const call = (
       originalRule: RecurringEventRecurrenceRule,
-      changes: Partial<SchedulerEvent> = {},
+      changes: Omit<SchedulerEventUpdatedProperties, 'id'> = {},
       originalSeriesStart: TemporalSupportedObject = seriesStart,
       split: TemporalSupportedObject = splitStart,
     ) => decideSplitRRule(adapter, originalRule, originalSeriesStart, split, changes);
@@ -221,7 +221,7 @@ describe('recurring-events/updateRecurringEvent', () => {
         {
           ...defaultEvent.modelInBuiltInFormat,
           ...changes,
-          id: `${defaultEvent.id}::${adapter.format(changes.start! as TemporalSupportedObject, 'localizedNumericDate')}`,
+          id: `${defaultEvent.id}::${adapter.format(changes.start!, 'localizedNumericDate')}`,
           extractedFromId: defaultEvent.id,
           rrule: {
             ...defaultEvent.dataTimezone.rrule,
@@ -301,7 +301,7 @@ describe('recurring-events/updateRecurringEvent', () => {
         {
           ...original.modelInBuiltInFormat,
           ...changes,
-          id: `${original.id}::${adapter.format(changes.start! as TemporalSupportedObject, 'localizedNumericDate')}`,
+          id: `${original.id}::${adapter.format(changes.start!, 'localizedNumericDate')}`,
           extractedFromId: original.id,
           rrule: {
             ...original.dataTimezone.rrule,
@@ -494,7 +494,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const updated = applyRecurringUpdateAll(adapter, original, occurrenceStart, changes);
 
       // DTSTART should still correspond to Jan 10 in the event data timezone (Tokyo)
-      const newStart = updated.updated![0].start! as TemporalSupportedObject;
+      const newStart = updated.updated![0].start!;
       expect(adapter.getDate(adapter.setTimezone(newStart, 'Asia/Tokyo'))).to.equal(10);
     });
 
@@ -593,12 +593,12 @@ describe('recurring-events/updateRecurringEvent', () => {
           start: mergeDateAndTime(
             adapter,
             original.dataTimezone.start.value,
-            changes.start! as TemporalSupportedObject,
+            changes.start!,
           ),
           end: mergeDateAndTime(
             adapter,
             original.dataTimezone.end.value,
-            changes.end! as TemporalSupportedObject,
+            changes.end!,
           ),
           rrule: { byDay: ['SA'], freq: 'WEEKLY' },
         },
@@ -747,7 +747,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       // EXDATE should match America/New_York startOfDay, not the display timezone shifted date
       expect(
         adapter.isSameDay(
-          updated.updated![0].exDates![0] as TemporalSupportedObject,
+          updated.updated![0].exDates![0],
           adapter.startOfDay(occurrenceStart),
         ),
       ).to.equal(true);

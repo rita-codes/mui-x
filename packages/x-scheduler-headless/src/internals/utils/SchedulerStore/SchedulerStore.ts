@@ -499,13 +499,15 @@ export class SchedulerStore<
     }
 
     const original = schedulerEventSelectors.processedEventRequired(this.state, copiedEvent.id);
-    const cleanChanges: Partial<SchedulerEvent> = { ...changes };
-    if (changes.start != null) {
-      cleanChanges.end = adapter.addMilliseconds(
-        changes.start,
-        original.dataTimezone.end.timestamp - original.dataTimezone.start.timestamp,
-      );
-    }
+    const cleanChanges: Omit<SchedulerEventUpdatedProperties, 'id'> = {
+      ...changes,
+      ...(changes.start != null && {
+        end: adapter.addMilliseconds(
+          changes.start,
+          original.dataTimezone.end.timestamp - original.dataTimezone.start.timestamp,
+        ),
+      }),
+    };
 
     if (copiedEvent.action === 'cut') {
       const updatedEvent = { id: copiedEvent.id, ...cleanChanges };
